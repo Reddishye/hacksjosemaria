@@ -21,7 +21,7 @@ Coolify will automatically detect the `nixpacks.toml` file and use it to build a
 - Port: 3000
 - The `nixpacks.toml` file configures:
   - Node.js 20
-  - npm for package installation
+  - Bun for fast package installation and builds
   - Production build
   - Start command
 
@@ -34,6 +34,7 @@ Alternatively, Coolify can use the provided `Dockerfile` for deployment.
 - Port: 3000
 - The Dockerfile creates an optimized production build with:
   - Multi-stage build for smaller image size
+  - Bun runtime for faster performance
   - Standalone Next.js output
   - Non-root user for security
 
@@ -69,7 +70,7 @@ Add any additional environment variables in the Coolify dashboard under your app
 
 - **Build Fails:** Check the Coolify logs for specific error messages
 - **Application Won't Start:** Verify the PORT environment variable is set correctly
-- **Missing Dependencies:** Ensure `package.json` is up to date and all dependencies are listed
+- **Missing Dependencies:** Ensure `package.json` and `bun.lock` are up to date and all dependencies are listed
 
 ## Next.js Standalone Output
 
@@ -79,4 +80,5 @@ This application is configured with `output: "standalone"` in `next.config.ts`, 
 
 - [Coolify Documentation](https://coolify.io/docs)
 - [Nixpacks Documentation](https://nixpacks.com/docs)
+- [Bun Documentation](https://bun.sh/docs)
 - [Next.js Deployment Documentation](https://nextjs.org/docs/deployment)

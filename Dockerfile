@@ -1,15 +1,13 @@
-# Use official Node.js image as base
-FROM node:20-alpine AS base
+# Use official Bun image as base
+FROM oven/bun:1-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# See: https://github.com/nodejs/docker-node#nodealpine
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -17,8 +15,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build Next.js application
-RUN npm run build
+# Build Next.js application with Bun
+RUN bun run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -41,4 +39,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["bun", "run", "start"]
