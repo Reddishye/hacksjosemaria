@@ -4,16 +4,19 @@ nixPkgs = ["nodejs_20"]
 aptPkgs = ["curl", "unzip"]
 
 [phases.install]
+# Install Bun v1.1.0, set up PATH, and install dependencies (chained to persist environment)
 cmds = [
   "curl -fsSL https://bun.sh/install | bash -s -- bun-v1.1.0 && export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && bun install"
 ]
 
 [phases.build]
+# Set up Bun PATH and build the application
 cmds = [
   "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && bun run build"
 ]
 
 [start]
+# Set up Bun PATH and start the application
 cmd = "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && bun run start"
 
 [variables]
