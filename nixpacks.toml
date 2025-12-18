@@ -4,12 +4,12 @@ aptPkgs = ["curl", "unzip"]
 
 [phases.install]
 cmds = [
-  "curl -fsSL https://bun.sh/install | bash && cp -r $HOME/.bun /tmp/bun-backup",
-  "cp -r /tmp/bun-backup $HOME/.bun && $HOME/.bun/bin/bun install"
+  "curl -fsSL https://bun.sh/install | bash && mv $HOME/.bun/bin/bun /usr/local/bin/bun && chmod +x /usr/local/bin/bun",
+  "/usr/local/bin/bun install"
 ]
 
 [phases.build]
-cmds = ["$HOME/.bun/bin/bun run build"]
+cmds = ["/usr/local/bin/bun run build"]
 
 [start]
-cmd = "$HOME/.bun/bin/bun run start"
+cmd = "/usr/local/bin/bun run start"
