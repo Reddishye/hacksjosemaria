@@ -1,42 +1,27 @@
-# Use official Bun image as base
-FROM oven/bun:1-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
+FROM oven/bun:1.3-alpine AS deps
 WORKDIR /app
+COPY package.json bun.lockb* ./
+RUN bun install --frozen-lockfile --production=false
 
-# Copy package files
-COPY package.json bun.lock* ./
-RUN bun install --frozen-lockfile
-
-# Rebuild the source code only when needed
-FROM base AS builder
+FROM oven/bun:1.3-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build Next.js application with Bun
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
-# Production image, copy all the files and run next
-FROM base AS runner
+FROM oven/bun:1.3-alpine AS runner
 WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME="0.0.0.0"
 
-ENV NODE_ENV=production
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy necessary files
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
+CMD ["bun", "run", "server.js"]
