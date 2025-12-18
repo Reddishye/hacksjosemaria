@@ -5,21 +5,16 @@ aptPkgs = ["curl", "unzip"]
 
 [phases.install]
 cmds = [
-  "curl -fsSL https://bun.sh/install | bash",
-  "export BUN_INSTALL=\"$HOME/.bun\"",
-  "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
-  "$HOME/.bun/bin/bun install"
+  "curl -fsSL https://bun.sh/install | bash -s -- bun-v1.1.0 && export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && bun install"
 ]
 
 [phases.build]
 cmds = [
-  "export BUN_INSTALL=\"$HOME/.bun\"",
-  "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
-  "$HOME/.bun/bin/bun run build"
+  "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && bun run build"
 ]
 
 [start]
-cmd = "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && $HOME/.bun/bin/bun run start"
+cmd = "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && bun run start"
 
 [variables]
 NODE_ENV = "production"
